@@ -17,7 +17,7 @@ Dependencies (besides some specific libs you'll find in cpan):
 To run it:
 
 In the machine where you have the xmms2 running:
-$ perl xmms2_scrobbler.pl
+$ perl desscrobbler_xmms2.pl
 
 To terminate it:
 In the machine where you have the xmms2 running:
