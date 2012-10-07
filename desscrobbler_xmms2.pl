@@ -248,17 +248,26 @@ sub playback_song_change{
     
     
     
-    print "'$music_artist': '$music_title' (album: '$music_album', track: '$music_track_number') ";
+    print "\n'$music_artist': '$music_title' (album: '$music_album', track: '$music_track_number') ";
     $|=1;#force the flush of the previous print
     
     if($music_artist ne '' && $music_title ne '' ){
-      now_playing_song(WS_URL,('api_key', API_KEY,
-			       'token',$token,
-			       'trackNumber',$music_track_number,
-			       'artist',$music_artist,
-			       'album',$music_album,
-			       'track',$music_title,
-			       'sk', $session_key));
+      
+      threads->create('now_playing_song', WS_URL, ('api_key', API_KEY,
+						    'token',$token,
+						    'trackNumber',$music_track_number,
+						    'artist',$music_artist,
+						    'album',$music_album,
+						    'track',$music_title,
+						    'sk', $session_key));
+      
+#      now_playing_song(WS_URL,('api_key', API_KEY,
+#			       'token',$token,
+#			       'trackNumber',$music_track_number,
+#			       'artist',$music_artist,
+#			       'album',$music_album,
+#			       'track',$music_title,
+#			       'sk', $session_key));
     }
     
 
@@ -364,7 +373,11 @@ sub playback_status_change{
     #status==0 -> stopped
     
     given($status){
-      when($_ == 1){$freezetime+=time-$stoptime;}
+      when($_ == 1){
+	$freezetime+=time-$stoptime;
+		    
+	break;	    
+      }
       default{$stoptime=time;}
     } 
   } 
